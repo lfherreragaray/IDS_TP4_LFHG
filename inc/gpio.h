@@ -19,21 +19,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef GPIO_H
+#define GPIO_H
 
 /**
- * @file main.h
- * @brief Declaración de la función principal del programa
+ * @file gpio.h
+ * @brief Declaración de funciones y tipos de datos para controlar un GPIO (General Purpose
+ * Input/Output).
  *
- * Este archivo contiene la declaración de la función principal del programa que se ejecuta al
- * iniciar el sistema. El propósito de esta función es iniciar el programa y manejar los errores
- * de manera básica. El valor de retorno indica si la ejecución fue exitosa o si hubo un error.
+ * Este archivo define una interfaz para la creación y manipulación de pines GPIO en un
+ * microcontrolador. Se proporciona funciones para configurar pines como salida, cambiar su estado y
+ * obtener su estado.
  */
 
 /* === Inclusión de archivos de cabecera ====================================================== */
 
-/* No se incluyen archivos adicionales */
+#include <stdint.h>
+#include <stdbool.h>
 
 /* === Cabecera para C++ ====================================================================== */
 
@@ -47,7 +49,14 @@ extern "C" {
 
 /* === Declaraciones de tipos de datos públicos ============================================ */
 
-/* No se definen tipos de datos en este archivo */
+/**
+ * @typedef gpio_t
+ * @brief Tipo de dato para representar un objeto GPIO.
+ *
+ * Este tipo es un puntero a una estructura interna que representa el estado y configuración de un
+ * GPIO.
+ */
+typedef struct gpio_s * gpio_t;
 
 /* === Declaraciones de variables públicas =================================================== */
 
@@ -56,16 +65,50 @@ extern "C" {
 /* === Declaraciones de funciones públicas =================================================== */
 
 /**
- * @brief Función principal del sistema, se ejecuta al iniciar el programa
+ * @brief Crea y configura un objeto GPIO.
  *
- * La función `main` es el punto de entrada del programa. Es la primera función que se ejecuta
- * cuando se inicia el sistema. Generalmente, en esta función se configuran los recursos del sistema
- * y se inicia la ejecución principal del programa. El valor de retorno indica el estado de la
- * ejecución: un valor cero indica éxito, y un valor negativo indica algún tipo de error.
+ * Esta función permite crear un objeto GPIO, especificando el puerto y el bit que se desea
+ * controlar.
  *
- * @return int El valor de retorno es cero si la ejecución fue exitosa, negativo si hubo un error.
+ * @param port Puerto del microcontrolador al que está conectado el pin.
+ * @param bit Bit dentro del puerto que se desea configurar.
+ *
+ * @return Un puntero a un objeto gpio_t que representa el pin configurado.
  */
-int main(void);
+gpio_t gpioCreate(uint8_t port, uint8_t bit);
+
+/**
+ * @brief Configura un GPIO como salida.
+ *
+ * Esta función configura un pin GPIO como salida, permitiendo cambiar su estado (alto o bajo).
+ *
+ * @param gpio Objeto gpio_t que representa el pin a configurar.
+ * @param output Valor booleano que indica si el pin debe ser una salida (true) o no (false).
+ */
+void gpioSetOutput(gpio_t gpio, bool output);
+
+/**
+ * @brief Establece el estado de un GPIO.
+ *
+ * Esta función permite cambiar el estado de un pin GPIO. El estado puede ser alto (true) o bajo
+ * (false).
+ *
+ * @param gpio Objeto gpio_t que representa el pin a configurar.
+ * @param state Estado deseado para el pin (true = alto, false = bajo).
+ */
+void gpioSetState(gpio_t gpio, bool state);
+
+/**
+ * @brief Obtiene el estado de un GPIO.
+ *
+ * Esta función permite leer el estado actual de un pin GPIO. El estado puede ser alto (true) o bajo
+ * (false).
+ *
+ * @param gpio Objeto gpio_t que representa el pin cuyo estado se desea leer.
+ *
+ * @return El estado actual del pin (true = alto, false = bajo).
+ */
+bool gpioGetState(gpio_t gpio);
 
 /* === Fin de la documentación ============================================================= */
 
@@ -73,4 +116,4 @@ int main(void);
 }
 #endif
 
-#endif /* MAIN_H */
+#endif /* GPIO_H */

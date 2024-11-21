@@ -19,21 +19,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef HAL_H
+#define HAL_H
 
 /**
- * @file main.h
- * @brief Declaración de la función principal del programa
+ * @file hal.h
+ * @brief Declaración de funciones para manejar la configuración y control de pines GPIO a través
+ *        de una capa de abstracción de hardware (HAL).
  *
- * Este archivo contiene la declaración de la función principal del programa que se ejecuta al
- * iniciar el sistema. El propósito de esta función es iniciar el programa y manejar los errores
- * de manera básica. El valor de retorno indica si la ejecución fue exitosa o si hubo un error.
+ * Este archivo contiene funciones para configurar la dirección de los pines GPIO, establecer su
+ * salida, y leer su estado. Está diseñado para ser utilizado en un nivel de abstracción sobre el
+ * hardware específico.
  */
 
 /* === Inclusión de archivos de cabecera ====================================================== */
 
-/* No se incluyen archivos adicionales */
+#include <stdint.h>
+#include <stdbool.h>
 
 /* === Cabecera para C++ ====================================================================== */
 
@@ -56,16 +58,40 @@ extern "C" {
 /* === Declaraciones de funciones públicas =================================================== */
 
 /**
- * @brief Función principal del sistema, se ejecuta al iniciar el programa
+ * @brief Configura la dirección de un pin GPIO.
  *
- * La función `main` es el punto de entrada del programa. Es la primera función que se ejecuta
- * cuando se inicia el sistema. Generalmente, en esta función se configuran los recursos del sistema
- * y se inicia la ejecución principal del programa. El valor de retorno indica el estado de la
- * ejecución: un valor cero indica éxito, y un valor negativo indica algún tipo de error.
+ * Esta función configura un pin GPIO como entrada o salida según el parámetro `output`.
  *
- * @return int El valor de retorno es cero si la ejecución fue exitosa, negativo si hubo un error.
+ * @param port El puerto del microcontrolador al que está conectado el pin.
+ * @param bit El bit dentro del puerto que se desea configurar.
+ * @param output Valor booleano que indica si el pin debe ser configurado como salida (true) o
+ * entrada (false).
  */
-int main(void);
+void hal_gpio_set_direction(uint8_t port, uint8_t bit, bool output);
+
+/**
+ * @brief Establece el estado de un pin GPIO configurado como salida.
+ *
+ * Esta función configura el estado de un pin GPIO que está configurado como salida. El pin puede
+ * ser activado (alto) o desactivado (bajo).
+ *
+ * @param port El puerto del microcontrolador al que está conectado el pin.
+ * @param bit El bit dentro del puerto que se desea configurar.
+ * @param active Valor booleano que indica si el pin debe ser activado (true) o desactivado (false).
+ */
+void hal_gpio_set_output(uint8_t port, uint8_t bit, bool active);
+
+/**
+ * @brief Lee el estado de un pin GPIO configurado como entrada.
+ *
+ * Esta función lee el estado de un pin GPIO que ha sido configurado como entrada.
+ *
+ * @param port El puerto del microcontrolador al que está conectado el pin.
+ * @param bit El bit dentro del puerto que se desea leer.
+ *
+ * @return El estado actual del pin (true = alto, false = bajo).
+ */
+bool hal_gpio_get_input(uint8_t port, uint8_t bit);
 
 /* === Fin de la documentación ============================================================= */
 
@@ -73,4 +99,4 @@ int main(void);
 }
 #endif
 
-#endif /* MAIN_H */
+#endif /* HAL_H */

@@ -19,15 +19,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-/** @file main.c
- ** @brief Definición de la función principal del programa
- **/
+/**
+ * @file main.c
+ * @brief Definición de la función principal del programa
+ *
+ * Este archivo contiene la implementación de la función principal del programa, que configura y
+ * controla un LED rojo utilizando un puerto GPIO.
+ *
+ * @author Luis Francisco Herrera Garay
+ * @date 2024
+ */
 
 /* === Headers files inclusions =============================================================== */
-
-#include "main.h"
+#include "main.h" /**< Archivo de cabecera para la definición de funciones principales. */
+#include "gpio.h" /**< Archivo de cabecera para la configuración y manejo de pines GPIO. */
 
 /* === Macros definitions ====================================================================== */
+#define LED_RED_BIT  7 /**< Número de bit del LED rojo en el puerto GPIO. */
+#define LED_RED_PORT 1 /**< Puerto donde está conectado el LED rojo. */
 
 /* === Private data type declarations ========================================================== */
 
@@ -43,10 +52,20 @@ SPDX-License-Identifier: MIT
 
 /* === Public function implementation ========================================================== */
 
+/**
+ * @brief Función principal del programa.
+ *
+ * Esta es la función principal que se ejecuta al iniciar el programa. Su propósito es configurar un
+ * puerto GPIO para controlar un LED rojo, configurándolo como salida y apagándolo al inicio.
+ *
+ * @return int Retorna 0 para indicar que el programa finalizó correctamente.
+ */
 int main(void) {
-    /*gpio_t red_led = gpioCreate(LED_ROJO_PORT, LED_ROJO_BIT);
-    gpioSetOutput(red_led, true);
-    gpioSetState(red_led, false);*/
+    gpio_t red_led = gpioCreate(LED_RED_PORT, LED_RED_BIT); /**< Crea el objeto para el LED rojo. */
+    gpioSetOutput(red_led, true);                           /**< Configura el pin como salida. */
+    gpioSetState(red_led, false); /**< Establece el estado del LED rojo en apagado. */
+
+    return 0; /**< Finaliza la ejecución del programa. */
 }
 
 /* === End of documentation ==================================================================== */
